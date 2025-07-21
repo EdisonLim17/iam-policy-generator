@@ -1,7 +1,19 @@
 module "vpc" {
   source = "./modules/vpc"
+}
 
-  vpc_cidr_block     = "10.16.0.0/16"
-  vpc_name           = "iam-policy-generator-main-vpc"
-  availability_zones = ["us-east-1a", "us-east-1b"]
+module "compute" {
+  source                            = "./modules/compute"
+  main_vpc_id                       = module.vpc.main_vpc_id
+  private_app_subnet_a_id           = module.vpc.private_app_subnet_a_id
+  private_app_subnet_b_id           = module.vpc.private_app_subnet_b_id
+  alb_sg_id                         = module.alb.alb_sg_id
+  fastapi_backend_app_server_tg_arn = module.alb.fastapi_backend_app_server_tg_arn
+}
+
+module "alb" {
+  source                 = "./modules/alb"
+  main_vpc_id            = module.vpc.main_vpc_id
+  public_web_subnet_a_id = module.vpc.public_web_subnet_a_id
+  public_web_subnet_b_id = module.vpc.public_web_subnet_b_id
 }
