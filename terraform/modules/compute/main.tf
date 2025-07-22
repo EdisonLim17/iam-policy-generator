@@ -4,7 +4,7 @@ resource "aws_launch_template" "fastapi_backend_app_server_lt" {
     instance_type = var.fastapi_backend_app_server_instance_type
 
     iam_instance_profile {
-        name = aws_iam_role.fastapi_backend_app_server_role.name
+        name = aws_iam_instance_profile.fastapi_backend_app_server_instance_profile.name
     }
 
     network_interfaces {
@@ -108,4 +108,13 @@ resource "aws_iam_policy" "secrets_manager_access_policy" {
 resource "aws_iam_role_policy_attachment" "fastapi_backend_app_server_secrets_manager_policy_attachment" {
     role       = aws_iam_role.fastapi_backend_app_server_role.name
     policy_arn = aws_iam_policy.secrets_manager_access_policy.arn
+}
+
+resource "aws_iam_instance_profile" "fastapi_backend_app_server_instance_profile" {
+    name = "fastapi_backend_app_server_instance_profile"
+    role = aws_iam_role.fastapi_backend_app_server_role.name
+
+    lifecycle {
+        create_before_destroy = true
+    }
 }
