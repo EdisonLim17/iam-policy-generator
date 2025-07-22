@@ -13,7 +13,7 @@ variable "vpc_name" {
 variable "availability_zones" {
   description = "List of availability zones to use for the subnets."
   type        = list(string)
-  default     = ["us_east_1a", "us_east_1b"]
+  default     = ["us-east-1a", "us-east-1b"]
 }
 
 variable "public_web_subnet_a_name" {

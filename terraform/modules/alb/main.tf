@@ -43,7 +43,7 @@ resource "aws_lb_listener" "fastapi_backend_app_server_listener" {
     port              = 443
     protocol          = "HTTPS"
     ssl_policy = "ELBSecurityPolicy-2021-06"
-    certificate_arn = aws_acm_certificate.fastapi_backend_app_server_cert.arn
+    #certificate_arn = aws_acm_certificate.fastapi_backend_app_server_cert.arn
 
     default_action {
         type             = "forward"
@@ -51,14 +51,14 @@ resource "aws_lb_listener" "fastapi_backend_app_server_listener" {
     }
 }
 
-resource "aws_acm_certificate" "fastapi_backend_app_server_cert" {
-    domain_name       = var.domain_name
-    validation_method = "DNS"
+# resource "aws_acm_certificate" "fastapi_backend_app_server_cert" {
+#     domain_name       = var.domain_name
+#     validation_method = "DNS"
 
-    lifecycle {
-        create_before_destroy = true
-    }
-}
+#     lifecycle {
+#         create_before_destroy = true
+#     }
+# }
 
 resource "aws_security_group" "alb_sg" {
     name        = "alb_sg"

@@ -12,7 +12,7 @@ resource "aws_launch_template" "fastapi_backend_app_server_lt" {
         security_groups             = [aws_security_group.fastapi_backend_app_server_sg.id]
     }
 
-    user_data = file("${path.module}/../../../app/start.sh")
+    user_data = base64encode(file("${path.module}/../../../app/start.sh"))
 
     lifecycle {
         create_before_destroy = true
