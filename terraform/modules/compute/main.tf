@@ -3,10 +3,16 @@ resource "aws_launch_template" "fastapi_backend_app_server_lt" {
     image_id      = data.aws_ssm_parameter.amazon_linux_2023_ami.value
     instance_type = var.fastapi_backend_app_server_instance_type
 
+    iam_instance_profile {
+        name = aws_iam_role.fastapi_backend_app_server_role.name
+    }
+
     network_interfaces {
         associate_public_ip_address = false
         security_groups             = [aws_security_group.fastapi_backend_app_server_sg.id]
     }
+
+    user_data = file("${path.module}/../../../app/start.sh")
 
     lifecycle {
         create_before_destroy = true
@@ -60,4 +66,46 @@ resource "aws_security_group" "fastapi_backend_app_server_sg" {
         security_groups = [var.alb_sg_id]
         description = "Allow HTTP traffic from ALB"
     }
+}
+
+resource "aws_iam_role" "fastapi_backend_app_server_role" {
+    name = "fastapi_backend_app_server_role"
+
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Action = "sts:AssumeRole"
+                Effect = "Allow"
+                Principal = {
+                    Service = "ec2.amazonaws.com"
+                }
+            }
+        ]
+    })
+    description = "Allows EC2 instances to assume role"
+}
+
+resource "aws_iam_policy" "secrets_manager_access_policy" {
+    name        = "secrets_manager_policy"
+    description = "Policy allowing access to openai_api_key secret in Secrets Manager"
+    
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = [
+                    "secretsmanager:GetSecretValue",
+                    "secretsmanager:DescribeSecret"
+                ]
+                Resource = "arn:aws:secretsmanager:us-east-1:415730361496:secret:openai/iam-policy-generator-api-key-vbsXNA"
+            }
+        ]
+    })
+}
+
+resource "aws_iam_role_policy_attachment" "fastapi_backend_app_server_secrets_manager_policy_attachment" {
+    role       = aws_iam_role.fastapi_backend_app_server_role.name
+    policy_arn = aws_iam_policy.secrets_manager_access_policy.arn
 }
