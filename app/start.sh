@@ -1,7 +1,10 @@
 #!/bin/bash
-dnf update -y
-dnf install -y python3 python3-pip
 
+#update system
+dnf update -y
+dnf install -y python3 python3-pip git
+
+#clone and setup app
 cd /home/ec2-user
 git clone https://github.com/EdisonLim17/iam-policy-generator.git
 cd iam-policy-generator/app
