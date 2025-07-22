@@ -7,7 +7,7 @@ variable "fastapi_backend_app_server_lb_name" {
 variable "domain_name" {
     description = "Domain name for the backend application server"
     type        = string
-    default     = "iampolicygenerator.com"
+    default     = "" # Should be set to the domain of Amplify
 }
 
 variable "main_vpc_id" {

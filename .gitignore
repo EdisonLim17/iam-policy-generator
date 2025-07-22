@@ -1,5 +1,13 @@
+#Terraform
 terraform.tfstate
 terraform.tfstate.backup
 .terraform/
 *.tfvars
 *.tfvars.json
+
+#Python
+__pycache__/
+venv/
+
+#Environment Variables
+.env
