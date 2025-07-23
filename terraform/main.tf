@@ -35,4 +35,6 @@ module "domain" {
 
 module "frontend" {
   source = "./modules/frontend"
+
+  github_oauth_token = "REMOVED_SECRET_TOKEN"
 }
