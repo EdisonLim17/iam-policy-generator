@@ -27,3 +27,8 @@ variable "public_web_subnet_b_id" {
     type        = string
     default     = ""
 }
+variable "fastapi_backend_app_cert_arn" {
+    description = "ARN of the ACM certificate for the FastAPI backend application"
+    type        = string
+    default     = ""
+}

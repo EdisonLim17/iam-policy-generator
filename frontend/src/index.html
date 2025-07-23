@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AWS IAM Policy Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/monaco-editor@0.45.0/min/vs/loader.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>AWS IAM Policy Generator</h1>
+
+    <div class="card">
+      <label for="prompt">Describe access requirements:</label>
+      <textarea id="prompt" rows="4" placeholder="e.g., Allow read-only access to S3 bucket 'my-bucket'"></textarea>
+      <button id="generateBtn">Generate Policy</button>
+    </div>
+
+    <div class="card">
+      <label>Generated IAM Policy:</label>
+      <div id="editor" class="editor"></div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
