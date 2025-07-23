@@ -25,5 +25,5 @@ data "aws_secretsmanager_secret_version" "github_pat" {
 }
 
 locals {
-    github_pat = jsondecode(data.aws_secretsmanager_secret_version.github_pat.secret_string).token
+    github_pat = data.aws_secretsmanager_secret_version.github_pat.secret_string
 }
