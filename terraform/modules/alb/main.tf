@@ -43,7 +43,7 @@ resource "aws_lb_listener" "fastapi_backend_app_server_listener" {
     port              = 443
     protocol          = "HTTPS"
 
-    ssl_policy = "ELBSecurityPolicy-2021-06"
+    ssl_policy = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
     certificate_arn = var.fastapi_backend_app_cert_arn
 
     default_action {

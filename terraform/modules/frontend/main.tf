@@ -3,7 +3,7 @@ resource "aws_amplify_app" "frontend_web" {
     description = "Frontend for the IAM Policy Generator"
     repository = "https://github.com/EdisonLim17/iam-policy-generator"
 
-    oauth_token = local.github_pat
+    access_token = local.github_pat
 
     build_spec = file("${path.module}/../../../frontend/amplify.yml")
     
@@ -21,9 +21,9 @@ resource "aws_amplify_branch" "frontend_web_branch" {
 }
 
 data "aws_secretsmanager_secret_version" "github_pat" {
-    secret_id     = "github/pat/iam-policy-generator"
+    secret_id     = "arn:aws:secretsmanager:us-east-1:415730361496:secret:github/pat/iam-policy-generator-bnr2z9"
 }
 
 locals {
-    github_pat = data.aws_secretsmanager_secret_version.github_pat.secret_string
+    github_pat = jsondecode(nonsensitive(data.aws_secretsmanager_secret_version.github_pat.secret_string)).github_pat
 }
