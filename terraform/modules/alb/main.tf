@@ -10,7 +10,7 @@ resource "aws_lb" "fastapi_backend_app_server_alb" {
 
 resource "aws_lb_target_group" "fastapi_backend_app_server_tg" {
     name     = "${var.fastapi_backend_app_server_lb_name}-tg"
-    port     = 80
+    port     = 8000
     protocol = "HTTP"
     vpc_id   = var.main_vpc_id
 

@@ -1,5 +1,6 @@
 import os, re
 from openai import OpenAI
+import json
 import boto3
 from botocore.exceptions import ClientError
 
@@ -21,7 +22,12 @@ def get_secret():
             SecretId=secret_name
         )
 
-        return get_secret_value_response['SecretString']
+        secret_string = get_secret_value_response['SecretString']
+        # Parse the secret string as JSON
+        secret_dict = json.loads(secret_string)
+        
+        # Return the OpenAI API key
+        return secret_dict.get('OPENAI_API_KEY')
     except ClientError as e:
         # For a list of exceptions thrown, see
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html

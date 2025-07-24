@@ -60,11 +60,19 @@ resource "aws_security_group" "fastapi_backend_app_server_sg" {
     vpc_id      = var.main_vpc_id
 
     ingress {
-        from_port   = 80
-        to_port     = 80
+        from_port   = 8000
+        to_port     = 8000
         protocol    = "tcp"
         security_groups = [var.alb_sg_id]
         description = "Allow HTTP traffic from ALB"
+    }
+
+    egress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow all outbound traffic"
     }
 }
 
@@ -108,6 +116,11 @@ resource "aws_iam_policy" "secrets_manager_access_policy" {
 resource "aws_iam_role_policy_attachment" "fastapi_backend_app_server_secrets_manager_policy_attachment" {
     role       = aws_iam_role.fastapi_backend_app_server_role.name
     policy_arn = aws_iam_policy.secrets_manager_access_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "fastapi_backend_app_server_ssm_policy_attachment" {
+    role       = aws_iam_role.fastapi_backend_app_server_role.name
+    policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_instance_profile" "fastapi_backend_app_server_instance_profile" {
