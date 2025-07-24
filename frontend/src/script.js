@@ -1,9 +1,7 @@
-const backend_url = "";
-
 fetch('/config.json')
   .then(response => response.json())
   .then(config => {
-    backend_url = config.backend_url;
+    const backend_url = config.backend_url;
     console.log('Backend URL:', backend_url);
   })
   .catch(err => {
