@@ -64,4 +64,20 @@ resource "aws_security_group" "alb_sg" {
         cidr_blocks = ["0.0.0.0/0"]
         description = "Allow HTTPS traffic"
     }
+
+    ingress {
+        from_port   = 80
+        to_port     = 80
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow HTTP traffic for redirect"
+    }
+
+    egress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "Allow all outbound traffic"
+    }
 }
