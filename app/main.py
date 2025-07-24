@@ -6,7 +6,7 @@ from iam_policy_generator import generate_iam_policy
 app = FastAPI()
 
 origins = [
-    "https://main.d38p951x38v43o.amplifyapp.com"  # Production domain
+    "https://main.d3pjimjzhxqzuw.amplifyapp.com"  # Production domain
 ]
 
 app.add_middleware(
