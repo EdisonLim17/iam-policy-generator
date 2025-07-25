@@ -24,8 +24,11 @@ module "alb" {
 module "domain" {
   source = "./modules/domain"
 
-  alb_dns_name = module.alb.alb_dns_name
-  alb_zone_id  = module.alb.alb_zone_id
+  alb_dns_name           = module.alb.alb_dns_name
+  alb_zone_id            = module.alb.alb_zone_id
+  amplify_app_id         = module.frontend.amplify_app_id
+  amplify_branch_name    = module.frontend.amplify_branch_name
+  amplify_default_domain = module.frontend.amplify_default_domain
 
   providers = {
     aws                 = aws
