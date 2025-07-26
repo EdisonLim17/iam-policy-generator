@@ -85,34 +85,42 @@ resource "aws_amplify_domain_association" "custom_amplify_domain" {
     depends_on = [ aws_acm_certificate_validation.iam_policy_generator_frontend_cert_validation ]
 }
 
-resource "aws_route53_record" "amplify_domain_verification" {
-    provider = aws.general_account
+# better to just add manually after terraform apply, otherwise requires two manual applies
+# resource "aws_route53_record" "amplify_domain_verification" {
+#     provider = aws.general_account
 
-    zone_id = data.aws_route53_zone.root_domain.zone_id
-    # No hard-coded values here but is impossible since amplify_domain_association won't finish creating before the DNS records are created
-    name    = split(" ", aws_amplify_domain_association.custom_amplify_domain.certificate_verification_dns_record)[0]
-    type    = split(" ", aws_amplify_domain_association.custom_amplify_domain.certificate_verification_dns_record)[1]
-    records = [split(" ", aws_amplify_domain_association.custom_amplify_domain.certificate_verification_dns_record)[2]]
-    # these values are manually added after terraform apply by fetching from amplify console
-    # name    = "_e8d2db6045bed74144ffd93eb0df8f8e.iampolicygenerator.edisonlim.ca."
-    # type    = "CNAME"
-    # records = ["_80565fae2baef7faf98738dc38de4385.xlfgrmvvlj.acm-validations.aws."]
-    ttl = 300
-}
+#     zone_id = data.aws_route53_zone.root_domain.zone_id
+    
+#     # No hard-coded values here but is impossible since amplify_domain_association won't finish creating before the DNS records are created
+#     name    = split(" ", aws_amplify_domain_association.custom_amplify_domain.certificate_verification_dns_record)[0]
+#     # type    = split(" ", aws_amplify_domain_association.custom_amplify_domain.certificate_verification_dns_record)[1]
+#     records = [split(" ", aws_amplify_domain_association.custom_amplify_domain.certificate_verification_dns_record)[2]]
 
-resource "aws_route53_record" "amplify_cname" {
-    provider = aws.general_account
+#     # these values are manually added after terraform apply by fetching from amplify console
+#     # name    = "_e8d2db6045bed74144ffd93eb0df8f8e.iampolicygenerator.edisonlim.ca."
+#     type    = "CNAME"
+#     # records = ["_80565fae2baef7faf98738dc38de4385.xlfgrmvvlj.acm-validations.aws."]
 
-    zone_id = data.aws_route53_zone.root_domain.zone_id
-    name    = var.iam_policy_generator_frontend_subdomain_name
-    # No hard-coded values here but is impossible since amplify_domain_association won't finish creating before the DNS records are created
-    type    = split(" ", local.amplify_subdomain_records[0])[0]
-    records = [split(" ", local.amplify_subdomain_records[0])[1]]
-    # these values are manually added after terraform apply by fetching from amplify console
-    # type    = "CNAME"
-    # records = ["d36ilisttnd6un.cloudfront.net"]
-    ttl     = 300
-}
+#     ttl = 300
+# }
+
+# better to just add manually after terraform apply, otherwise requires two manual applies
+# resource "aws_route53_record" "amplify_cname" {
+#     provider = aws.general_account
+
+#     zone_id = data.aws_route53_zone.root_domain.zone_id
+#     name    = var.iam_policy_generator_frontend_subdomain_name
+
+#     # No hard-coded values here but is impossible since amplify_domain_association won't finish creating before the DNS records are created
+#     # type    = split(" ", local.amplify_subdomain_records[0])[0]
+#     records = [split(" ", local.amplify_subdomain_records[0])[1]]
+
+#     # these values are manually added after terraform apply by fetching from amplify console
+#     type    = "CNAME"
+#     # records = ["d36ilisttnd6un.cloudfront.net"]
+
+#     ttl     = 300
+# }
 
 locals {
   backend_cert_validation_option = element(tolist(aws_acm_certificate.iam_policy_generator_backend_cert.domain_validation_options), 0)
