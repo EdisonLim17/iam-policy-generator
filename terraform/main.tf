@@ -39,3 +39,12 @@ module "domain" {
 module "frontend" {
   source = "./modules/frontend"
 }
+
+module "database" {
+  source = "./modules/database"
+
+  private_db_subnet_a_id = module.vpc.private_db_subnet_a_id
+  private_db_subnet_b_id = module.vpc.private_db_subnet_b_id
+  main_vpc_id            = module.vpc.main_vpc_id
+  backend_app_sg_id      = module.compute.fastapi_backend_app_server_sg_id
+}
