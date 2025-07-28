@@ -7,7 +7,7 @@ variable "instance_identifier" {
 variable "db_name" {
   description = "The name of the database to create."
   type        = string
-  default = "iam-policy-generator-db"
+  default = "IAMPolicyGeneratorDB"
 }
 
 variable "allocated_storage" {
@@ -25,13 +25,13 @@ variable "storage_type" {
 variable "engine" {
   description = "The database engine to use."
   type        = string
-  default     = "postgresql"
+  default     = "postgres"
 }
 
 variable "engine_version" {
   description = "The version of the database engine."
   type        = string
-  default     = "17.4-R1"
+  default     = "17.4"
 }
 
 variable "instance_class" {

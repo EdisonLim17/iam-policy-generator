@@ -2,3 +2,9 @@ fastapi
 uvicorn
 openai
 boto3
+sqlalchemy
+asyncpg
+psycopg2-binary
+requests
+python-jose[cryptography]
+python-multipart

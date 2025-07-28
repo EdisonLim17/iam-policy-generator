@@ -5,7 +5,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 
-def get_secret():
+def get_openai_api_key():
 
     secret_name = "openai/iam-policy-generator-api-key"
     region_name = "us-east-1"
@@ -33,7 +33,7 @@ def get_secret():
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
-client = OpenAI(api_key=get_secret())
+client = OpenAI(api_key=get_openai_api_key())
 
 def generate_iam_policy(user_prompt: str):
     try:
