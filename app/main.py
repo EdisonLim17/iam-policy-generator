@@ -1,12 +1,11 @@
 from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from pydantic import BaseModel
 from datetime import datetime, timedelta
-import requests
-import json
-import boto3
+import requests, urllib.parse, json, boto3
 from botocore.exceptions import ClientError
 from iam_policy_generator import generate_iam_policy
 from models import SessionLocal, get_or_create_user, save_history, get_user_history
@@ -126,7 +125,9 @@ def google_callback(code: str):
 
     # Create JWT
     token = create_access_token({"sub": user.email, "user_id": user.id})
-    return {"access_token": token, "token_type": "bearer", "email": user.email}
+
+    frontend_redirect = f"https://iampolicygenerator.edisonlim.ca?token={token}&email={urllib.parse.quote(user.email)}&picture={urllib.parse.quote(user.picture)}"
+    return RedirectResponse(url=frontend_redirect)
 
 
 # =======================
