@@ -32,7 +32,7 @@ require(["vs/editor/editor.main"], function () {
 // Sign in with Google
 document.getElementById("googleSignInBtn").addEventListener("click", () => {
   const clientId = google_client_id;
-  const redirectUri = `${window.location.origin}/oauth2/callback`;
+  const redirectUri = "https://iampolicygenerator-backend.edisonlim.ca/oauth2/callback";
   const scope = "openid email profile";
 
   const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&access_type=offline&prompt=consent`;
@@ -42,17 +42,14 @@ document.getElementById("googleSignInBtn").addEventListener("click", () => {
 
 // Check for auth code
 const urlParams = new URLSearchParams(window.location.search);
-const code = urlParams.get("code");
-if (code) {
-  fetch(`${backend_url}/auth/google/callback?code=${code}`)
-    .then(response => response.json())
-    .then(data => {
-      if (data.access_token) {
-        token = data.access_token;
-        showUserInfo(data);
-        fetchHistory();
-      }
-    });
+const accessToken = urlParams.get("token");
+const email = urlParams.get("email");
+const picture = urlParams.get("picture");
+
+if (accessToken) {
+  token = accessToken;
+  showUserInfo({ email, picture });
+  fetchHistory();
 }
 
 // Show user info
