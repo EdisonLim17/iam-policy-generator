@@ -27,3 +27,18 @@ data "aws_secretsmanager_secret_version" "github_pat" {
 locals {
     github_pat = jsondecode(nonsensitive(data.aws_secretsmanager_secret_version.github_pat.secret_string)).github_pat
 }
+
+resource "random_password" "jwt_secret_key" {
+  length           = 64
+  special          = true
+}
+
+resource "aws_secretsmanager_secret" "jwt_secret" {
+  name        = "jwt/iam-policy-generator-secret"
+  description = "JWT signing key for IAM Policy Generator"
+}
+
+resource "aws_secretsmanager_secret_version" "jwt_secret_value" {
+  secret_id     = aws_secretsmanager_secret.jwt_secret.id
+  secret_string = jsonencode({ key = random_password.jwt_secret_key.result })
+}

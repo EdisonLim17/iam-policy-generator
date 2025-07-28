@@ -17,3 +17,7 @@ output "amplify_default_domain" {
   description = "The default domain of the Amplify app"
   value       = aws_amplify_app.frontend_web.default_domain
 }
+
+output "jwt_secret_arn" {
+  value = aws_secretsmanager_secret.jwt_secret.arn
+}
