@@ -81,7 +81,43 @@ async function fetchHistory() {
     if (Array.isArray(data)) {
       data.forEach(item => {
         const li = document.createElement("li");
-        li.textContent = `${item.prompt} → Policy saved`;
+
+        const summary = document.createElement("div");
+        summary.textContent = item.prompt;
+        summary.style.cursor = "pointer";
+        summary.style.fontWeight = "bold";
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.textContent = "View JSON";
+        toggleBtn.style.marginLeft = "1rem";
+        toggleBtn.style.background = "#fbbf24";
+        toggleBtn.style.border = "none";
+        toggleBtn.style.borderRadius = "4px";
+        toggleBtn.style.padding = "2px 8px";
+        toggleBtn.style.cursor = "pointer";
+        toggleBtn.style.fontSize = "12px";
+
+        const jsonBlock = document.createElement("pre");
+        jsonBlock.textContent = JSON.stringify(item.policy, null, 2);
+        jsonBlock.style.display = "none";
+        jsonBlock.style.backgroundColor = "#0f172a";
+        jsonBlock.style.padding = "0.75rem";
+        jsonBlock.style.borderRadius = "4px";
+        jsonBlock.style.marginTop = "0.5rem";
+        jsonBlock.style.overflowX = "auto";
+        jsonBlock.style.whiteSpace = "pre-wrap";
+        jsonBlock.style.fontSize = "12px";
+        jsonBlock.style.color = "#d1d5db"; // light gray
+
+        toggleBtn.addEventListener("click", () => {
+          const isVisible = jsonBlock.style.display === "block";
+          jsonBlock.style.display = isVisible ? "none" : "block";
+          toggleBtn.textContent = isVisible ? "View JSON" : "Hide JSON";
+        });
+
+        li.appendChild(summary);
+        li.appendChild(toggleBtn);
+        li.appendChild(jsonBlock);
         list.appendChild(li);
       });
     }

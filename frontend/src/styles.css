@@ -20,8 +20,8 @@ h1 {
 
 .main-layout {
   display: flex;
-  gap: 3rem;
   align-items: stretch;
+  gap: 3rem;
 }
 
 .left-panel {
@@ -71,18 +71,20 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 
 .user-info img {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  margin: 10px 0;
+  margin-bottom: 5px;
 }
 
 .user-info p {
   margin: 5px 0;
+  font-size: 14px;
+  color: #d1d5db;
 }
 
 .history {
@@ -110,9 +112,11 @@ h1 {
 }
 
 .history li {
-  padding: 8px 0;
-  border-bottom: 1px solid #374151;
-  font-size: 14px;
+  background-color: #0f172a;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #374151;
 }
 
 .card {
