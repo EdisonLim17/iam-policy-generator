@@ -8,6 +8,18 @@ fetch('/config.json')
     backend_url = config.backend_url;
     google_client_id = config.google_client_id;
     console.log('Backend URL:', backend_url);
+
+    // Auth token check here so backend_url is ready before fetchHistory is called
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get("token");
+    const email = urlParams.get("email");
+    const picture = urlParams.get("picture");
+
+    if (accessToken) {
+      token = accessToken;
+      showUserInfo({ email, picture });
+      fetchHistory();
+    }
   })
   .catch(err => {
     console.error('Failed to load config.json', err);
@@ -40,18 +52,6 @@ document.getElementById("googleSignInBtn").addEventListener("click", () => {
   window.location.href = oauthUrl;
 });
 
-// Check for auth code
-const urlParams = new URLSearchParams(window.location.search);
-const accessToken = urlParams.get("token");
-const email = urlParams.get("email");
-const picture = urlParams.get("picture");
-
-if (accessToken) {
-  token = accessToken;
-  showUserInfo({ email, picture });
-  fetchHistory();
-}
-
 // Show user info
 function showUserInfo(user) {
   document.getElementById("authSection").style.display = "none";
@@ -63,21 +63,6 @@ function showUserInfo(user) {
 
 // Fetch user history
 async function fetchHistory() {
-  // fetch(`${backend_url}/history`, {
-  //   headers: {
-  //     Authorization: `Bearer ${token}`
-  //   }
-  // })
-  //   .then(res => res.json())
-  //   .then(data => {
-  //     const list = document.getElementById("historyList");
-  //     list.innerHTML = "";
-  //     data.forEach(item => {
-  //       const li = document.createElement("li");
-  //       li.textContent = `${item.prompt} → Policy saved`;
-  //       list.appendChild(li);
-  //     });
-  //   });
   try {
     const response = await fetch(`${backend_url}/history`, {
       headers: {
@@ -102,7 +87,7 @@ async function fetchHistory() {
     }
   } catch (error) {
     console.error("Error fetching history:", error);
-    // Show user-friendly error message
+    // Optionally show a user-friendly error message here
   }
 }
 
