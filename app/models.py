@@ -1,7 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session, sessionmaker
-import os
+import os, boto3, json
+from botocore.exceptions import ClientError
 from datetime import datetime
 
 Base = declarative_base()
@@ -27,9 +28,21 @@ class History(Base):
 
     user = relationship("User", back_populates="histories")
 
+def get_database_values(secret_name: str):
+    region_name = "us-east-1"
+    client = boto3.client('secretsmanager', region_name=region_name)
+    try:
+        response = client.get_secret_value(SecretId=secret_name)
+        return json.loads(response['SecretString'])
+    except ClientError as e:
+        print(f"Error retrieving secret {secret_name}: {e}")
+        raise e
+    
+database_values = get_database_values("rds/iam-policy-generator-credentials-output")
+
 DATABASE_URL = (
-    f"postgresql://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@"
-    f"{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    f"postgresql://{database_values.get('username')}:{database_values.get('password')}@"
+    f"{database_values.get('host')}:{database_values.get('port')}/{database_values.get('db_name')}"
 )
 
 engine = create_engine(DATABASE_URL)

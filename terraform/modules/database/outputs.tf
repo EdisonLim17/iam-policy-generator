@@ -1,4 +1,4 @@
-output "db_enpoint" {
+output "db_endpoint" {
   description = "The endpoint of the primary RDS instance."
   value       = aws_db_instance.primary_rds_instance.address
 }

@@ -50,10 +50,28 @@ resource "aws_security_group" "database_sg" {
     }
 }
 
-data "aws_secretsmanager_secret_version" "db_password" {
+data "aws_secretsmanager_secret_version" "db_credentials" {
     secret_id     = "arn:aws:secretsmanager:us-east-1:415730361496:secret:rds/iam-policy-generator-credentials-SaJs7B"
 }
 
+resource "aws_secretsmanager_secret" "db_credentials_output" {
+  name        = "rds/iam-policy-generator-credentials-output"
+  description = "Database credentials for IAM Policy Generator"
+
+  recovery_window_in_days = 0
+}
+
+resource "aws_secretsmanager_secret_version" "db_credentials_output_value" {
+  secret_id     = aws_secretsmanager_secret.db_credentials_output.id
+  secret_string = jsonencode({
+    username = local.db_credentials.username
+    password = local.db_credentials.password
+    host = aws_db_instance.primary_rds_instance.address
+    port = aws_db_instance.primary_rds_instance.port
+    db_name = aws_db_instance.primary_rds_instance.db_name
+  })
+}
+
 locals {
-  db_credentials = jsondecode(data.aws_secretsmanager_secret_version.db_password.secret_string)
+  db_credentials = jsondecode(data.aws_secretsmanager_secret_version.db_credentials.secret_string)
 }

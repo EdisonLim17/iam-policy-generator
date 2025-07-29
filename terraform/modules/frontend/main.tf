@@ -36,6 +36,8 @@ resource "random_password" "jwt_secret_key" {
 resource "aws_secretsmanager_secret" "jwt_secret" {
   name        = "jwt/iam-policy-generator-secret"
   description = "JWT signing key for IAM Policy Generator"
+
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "jwt_secret_value" {

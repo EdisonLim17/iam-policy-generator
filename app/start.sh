@@ -12,4 +12,4 @@ cd iam-policy-generator/app
 pip3 install --upgrade pip
 pip3 install -r requirements.txt
 
-nohup uvicorn main:app --host 0.0.0.0 --port 8000 > app.log 2>&1 &
+nohup uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info > /home/ec2-user/iam-api.log 2>&1 &
