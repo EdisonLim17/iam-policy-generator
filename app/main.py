@@ -92,7 +92,7 @@ async def generate(prompt: PromptRequest):
 # =======================
 # Google OAuth Callback
 # =======================
-@app.get("/auth/google/callback")
+@app.get("/oauth2/callback")
 def google_callback(code: str):
     token_url = "https://oauth2.googleapis.com/token"
     token_data = {

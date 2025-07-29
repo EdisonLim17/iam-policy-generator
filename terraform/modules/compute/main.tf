@@ -107,7 +107,12 @@ resource "aws_iam_policy" "secrets_manager_access_policy" {
                     "secretsmanager:GetSecretValue",
                     "secretsmanager:DescribeSecret"
                 ]
-                Resource = "arn:aws:secretsmanager:us-east-1:415730361496:secret:openai/iam-policy-generator-api-key-vbsXNA"
+                Resource = [
+                    "arn:aws:secretsmanager:us-east-1:415730361496:secret:openai/iam-policy-generator-api-key-vbsXNA",
+                    "arn:aws:secretsmanager:us-east-1:415730361496:secret:rds/iam-policy-generator-credentials-output-*",
+                    "arn:aws:secretsmanager:us-east-1:415730361496:secret:google/iam-policy-generator-oauth-credentials-KWyDPD",
+                    "arn:aws:secretsmanager:us-east-1:415730361496:secret:jwt/iam-policy-generator-secret-*"
+                    ]
             }
         ]
     })
