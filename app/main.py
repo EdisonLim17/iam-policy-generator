@@ -30,7 +30,7 @@ google_client_secret = None
 SECRET_KEY = None
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
-REDIRECT_URI = "https://iampolicygenerator.edisonlim.ca/oauth2/callback"
+REDIRECT_URI = "https://iampolicygenerator-backend.edisonlim.ca/oauth2/callback"
 
 # =======================
 # Load AWS Secrets
