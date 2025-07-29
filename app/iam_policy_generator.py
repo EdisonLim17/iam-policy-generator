@@ -41,7 +41,7 @@ def generate_iam_policy(user_prompt: str):
             model = "gpt-4.1-nano-2025-04-14",
             instructions = "You are an expert at writing AWS IAM policies. " \
             "Given a description of access requirements, return a valid IAM policy JSON. " \
-            "Include comments to summarize each rule, but add no further output outside of the IAM policy JSON. " \
+            "Include no comments and add no further output outside of the IAM policy JSON, your entire output should be in valid JSON format. " \
             "Ensure the policy is well-formed and adheres to latest AWS best practices.",
             input = user_prompt
         )
