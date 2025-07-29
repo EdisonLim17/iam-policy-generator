@@ -96,11 +96,16 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
       body: JSON.stringify({ prompt }),
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error generating policy: ${response.status} ${errorText}`);
+    }
+
     const data = await response.json();
     editor.setValue(data.iam_policy || "// Invalid response");
 
     if (token) {
-      await fetch(`${backend_url}/save-history`, {
+      const saveResponse = await fetch(`${backend_url}/save-history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,6 +113,12 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
         },
         body: JSON.stringify({ prompt, policy: data.iam_policy })
       });
+
+      if (!saveResponse.ok) {
+        const errorText = await saveResponse.text();
+        throw new Error(`Error saving history: ${saveResponse.status} ${errorText}`);
+      }
+      
       fetchHistory();
     }
   } catch (error) {

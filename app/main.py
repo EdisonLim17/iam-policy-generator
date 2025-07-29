@@ -156,10 +156,14 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
 # =======================
 # History Endpoints
 # =======================
+class SaveHistoryRequest(BaseModel):
+    prompt: str
+    policy: str
+
 @app.post("/save-history")
-def save_user_history(prompt: str, policy: dict, current_user=Depends(get_current_user)):
+def save_user_history(data: SaveHistoryRequest, current_user=Depends(get_current_user)):
     db = SessionLocal()
-    saved = save_history(db, current_user["user_id"], prompt, policy)
+    saved = save_history(db, current_user["user_id"], data.prompt, json.loads(data.policy))
     return {"message": "History saved", "history_id": saved.id}
 
 @app.get("/history")
