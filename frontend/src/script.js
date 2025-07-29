@@ -62,22 +62,48 @@ function showUserInfo(user) {
 }
 
 // Fetch user history
-function fetchHistory() {
-  fetch(`${backend_url}/history`, {
-    headers: {
-      Authorization: `Bearer ${token}`
+async function fetchHistory() {
+  // fetch(`${backend_url}/history`, {
+  //   headers: {
+  //     Authorization: `Bearer ${token}`
+  //   }
+  // })
+  //   .then(res => res.json())
+  //   .then(data => {
+  //     const list = document.getElementById("historyList");
+  //     list.innerHTML = "";
+  //     data.forEach(item => {
+  //       const li = document.createElement("li");
+  //       li.textContent = `${item.prompt} → Policy saved`;
+  //       list.appendChild(li);
+  //     });
+  //   });
+  try {
+    const response = await fetch(`${backend_url}/history`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  })
-    .then(res => res.json())
-    .then(data => {
-      const list = document.getElementById("historyList");
-      list.innerHTML = "";
+    
+    const data = await response.json();
+    const list = document.getElementById("historyList");
+    list.innerHTML = "";
+    
+    if (Array.isArray(data)) {
       data.forEach(item => {
         const li = document.createElement("li");
         li.textContent = `${item.prompt} → Policy saved`;
         list.appendChild(li);
       });
-    });
+    }
+  } catch (error) {
+    console.error("Error fetching history:", error);
+    // Show user-friendly error message
+  }
 }
 
 // Generate IAM Policy
