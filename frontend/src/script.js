@@ -56,7 +56,7 @@ document.getElementById("googleSignInBtn").addEventListener("click", () => {
 function showUserInfo(user) {
   document.getElementById("authSection").style.display = "none";
   document.getElementById("userInfo").style.display = "flex";
-  document.getElementById("historySection").style.display = "block";
+  document.getElementById("historySection").style.display = "flex";
   document.getElementById("userPicture").src = user.picture;
   document.getElementById("userEmail").textContent = user.email;
 }
