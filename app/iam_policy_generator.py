@@ -41,13 +41,30 @@ def generate_iam_policy(user_prompt: str):
             model = "gpt-4.1-nano-2025-04-14",
             instructions = "You are an expert at writing AWS IAM policies. " \
             "Given a description of access requirements, return a valid IAM policy JSON. " \
-            "Include no comments and add no further output outside of the IAM policy JSON, your entire output should be in valid JSON format. " \
+            "Include no comments and add no further output outside of the IAM policy JSON." \
+            "Your entire output should be in valid JSON format with no markdown. " \
             "Ensure the policy is well-formed and adheres to latest AWS best practices.",
             input = user_prompt
         )
 
-        return response.output_text
+        cleaned_response = extract_json_block(response.output_text)
+
+        return cleaned_response
 
     except Exception as e:
         print(f"Error generating IAM policy: {e}")
         return {"error": "Failed to generate IAM policy. Please try again."}
+
+# Extract JSON block from the response
+def extract_json_block(text: str) -> str:
+    # Try to match triple backtick JSON block
+    match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
+    if match:
+        return json.dumps(match.group(1))
+    
+    # Fallback: find the first JSON-looking object
+    match = re.search(r"(\{.*\})", text, re.DOTALL)
+    if match:
+        return json.dumps(match.group(1))
+
+    raise ValueError("No valid JSON found in the response.")
