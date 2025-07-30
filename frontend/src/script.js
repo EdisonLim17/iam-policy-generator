@@ -82,28 +82,26 @@ async function fetchHistory() {
       data.forEach(item => {
         const li = document.createElement("li");
 
+        // History summary that you click to load
         const summary = document.createElement("div");
         summary.textContent = item.prompt;
         summary.style.cursor = "pointer";
         summary.style.fontWeight = "bold";
+        summary.style.padding = "0.5rem 0";
 
-        const toggleBtn = document.createElement("button");
-        toggleBtn.textContent = "Load";
-        toggleBtn.style.marginLeft = "1rem";
-        toggleBtn.style.background = "#fbbf24";
-        toggleBtn.style.border = "none";
-        toggleBtn.style.borderRadius = "4px";
-        toggleBtn.style.padding = "2px 8px";
-        toggleBtn.style.cursor = "pointer";
-        toggleBtn.style.fontSize = "12px";
-
-        toggleBtn.addEventListener("click", () => {
+        summary.addEventListener("click", () => {
           document.getElementById("prompt").value = item.prompt;
-          editor.setValue(JSON.stringify(item.policy, null, 2));
+
+          try {
+            const parsed = typeof item.policy === "string" ? JSON.parse(item.policy) : item.policy;
+            editor.setValue(JSON.stringify(parsed, null, 2));
+          } catch (e) {
+            console.error("Failed to load policy:", e);
+            editor.setValue("// Invalid JSON format");
+          }
         });
 
         li.appendChild(summary);
-        li.appendChild(toggleBtn);
         list.appendChild(li);
       });
     }
@@ -160,5 +158,13 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
   } finally {
     button.disabled = false;
     button.textContent = "Generate Policy";
+  }
+});
+
+// Handle Enter key for generating policy
+document.getElementById("prompt").addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault(); // Prevent newline
+    document.getElementById("generateBtn").click(); // Simulate button click
   }
 });

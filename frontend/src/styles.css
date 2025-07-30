@@ -120,7 +120,7 @@ h1 {
 .history h2 {
   text-align: center;
   font-size: 1.25rem;
-  margin-bottom: 0 0 1rem 0;
+  margin: 0;
   padding: 0;
 }
 
@@ -149,7 +149,7 @@ h1 {
 }
 
 .history li:hover {
-  background-color: #1e293b;
+  background-color: #162030;
 }
 
 .card {
