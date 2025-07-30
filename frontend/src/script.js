@@ -31,9 +31,9 @@ require.config({ paths: { vs: "https://unpkg.com/monaco-editor@0.45.0/min/vs" } 
 require(["vs/editor/editor.main"], function () {
   editor = monaco.editor.create(document.getElementById("editor"), {
     value: `{
-  "Version": "2012-10-17",
-  "Statement": []
-}`,
+      "Version": "2012-10-17",
+      "Statement": []
+    }`,
     language: "json",
     theme: "vs-dark",
     readOnly: true,
@@ -134,6 +134,13 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
 
     const data = await response.json();
     editor.setValue(data.iam_policy || "// Invalid response");
+    try {
+      const parsed = typeof data.iam_policy === "string" ? JSON.parse(data.iam_policy) : data.iam_policy;
+      editor.setValue(JSON.stringify(parsed, null, 2));
+    } catch (e) {
+      console.error("Failed to generate policy:", e);
+      editor.setValue("// Invalid response");
+    }
 
     if (token) {
       const saveResponse = await fetch(`${backend_url}/save-history`, {
