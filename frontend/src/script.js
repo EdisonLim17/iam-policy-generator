@@ -168,3 +168,32 @@ document.getElementById("prompt").addEventListener("keydown", function (e) {
     document.getElementById("generateBtn").click(); // Simulate button click
   }
 });
+
+// Sign out functionality
+document.getElementById("signOutBtn").addEventListener("click", () => {
+  // Clear token
+  token = null;
+
+  // Hide user info and history panel
+  document.getElementById("userInfo").style.display = "none";
+  document.getElementById("historySection").style.display = "none";
+
+  // Show sign-in section
+  document.getElementById("authSection").style.display = "flex";
+
+  // Clear editor and prompt inputs (optional)
+  editor.setValue(`{
+    "Version": "2012-10-17",
+    "Statement": []
+  }`);
+  document.getElementById("prompt").value = "";
+
+  // Optionally clear URL params for token/email/picture to avoid auto sign-in on refresh
+  if (window.history.replaceState) {
+    const url = new URL(window.location);
+    url.searchParams.delete('token');
+    url.searchParams.delete('email');
+    url.searchParams.delete('picture');
+    window.history.replaceState({}, document.title, url.toString());
+  }
+});
