@@ -134,13 +134,13 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
 
     const data = await response.json();
     editor.setValue(data.iam_policy || "// Invalid response");
-    try {
-      const parsed = typeof data.iam_policy === "string" ? JSON.parse(data.iam_policy) : data.iam_policy;
-      editor.setValue(JSON.stringify(parsed, null, 2));
-    } catch (e) {
-      console.error("Failed to generate policy:", e);
-      editor.setValue("// Invalid response");
-    }
+    // try {
+    //   const parsed = typeof data.iam_policy === "string" ? JSON.parse(data.iam_policy) : data.iam_policy;
+    //   editor.setValue(JSON.stringify(parsed, null, 2));
+    // } catch (e) {
+    //   console.error("Failed to generate policy:", e);
+    //   editor.setValue("// Invalid response");
+    // }
 
     if (token) {
       const saveResponse = await fetch(`${backend_url}/save-history`, {

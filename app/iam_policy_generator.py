@@ -47,24 +47,26 @@ def generate_iam_policy(user_prompt: str):
             input = user_prompt
         )
 
-        cleaned_response = extract_json_block(response.output_text)
+        return response.output_text
 
-        return cleaned_response
+        # cleaned_response = extract_json_block(response.output_text)
+
+        # return cleaned_response
 
     except Exception as e:
         print(f"Error generating IAM policy: {e}")
         return {"error": "Failed to generate IAM policy. Please try again."}
 
 # Extract JSON block from the response
-def extract_json_block(text: str) -> str:
-    # Try to match triple backtick JSON block
-    match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
-    if match:
-        return json.loads(match.group(1))
+# def extract_json_block(text: str) -> str:
+#     # Try to match triple backtick JSON block
+#     match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
+#     if match:
+#         return json.loads(match.group(1))
     
-    # Fallback: find the first JSON-looking object
-    match = re.search(r"(\{.*\})", text, re.DOTALL)
-    if match:
-        return json.loads(match.group(1))
+#     # Fallback: find the first JSON-looking object
+#     match = re.search(r"(\{.*\})", text, re.DOTALL)
+#     if match:
+#         return json.loads(match.group(1))
 
-    raise ValueError("No valid JSON found in the response.")
+#     raise ValueError("No valid JSON found in the response.")
