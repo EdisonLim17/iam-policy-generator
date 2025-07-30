@@ -88,7 +88,7 @@ async function fetchHistory() {
         summary.style.fontWeight = "bold";
 
         const toggleBtn = document.createElement("button");
-        toggleBtn.textContent = "View JSON";
+        toggleBtn.textContent = "Load";
         toggleBtn.style.marginLeft = "1rem";
         toggleBtn.style.background = "#fbbf24";
         toggleBtn.style.border = "none";
@@ -97,27 +97,13 @@ async function fetchHistory() {
         toggleBtn.style.cursor = "pointer";
         toggleBtn.style.fontSize = "12px";
 
-        const jsonBlock = document.createElement("pre");
-        jsonBlock.textContent = JSON.stringify(item.policy, null, 2);
-        jsonBlock.style.display = "none";
-        jsonBlock.style.backgroundColor = "#0f172a";
-        jsonBlock.style.padding = "0.75rem";
-        jsonBlock.style.borderRadius = "4px";
-        jsonBlock.style.marginTop = "0.5rem";
-        jsonBlock.style.overflowX = "auto";
-        jsonBlock.style.whiteSpace = "pre-wrap";
-        jsonBlock.style.fontSize = "12px";
-        jsonBlock.style.color = "#d1d5db"; // light gray
-
         toggleBtn.addEventListener("click", () => {
-          const isVisible = jsonBlock.style.display === "block";
-          jsonBlock.style.display = isVisible ? "none" : "block";
-          toggleBtn.textContent = isVisible ? "View JSON" : "Hide JSON";
+          document.getElementById("prompt").value = item.prompt;
+          editor.setValue(JSON.stringify(item.policy, null, 2));
         });
 
         li.appendChild(summary);
         li.appendChild(toggleBtn);
-        li.appendChild(jsonBlock);
         list.appendChild(li);
       });
     }
