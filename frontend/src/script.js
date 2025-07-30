@@ -59,6 +59,7 @@ function showUserInfo(user) {
   document.getElementById("historySection").style.display = "flex";
   document.getElementById("userPicture").src = user.picture;
   document.getElementById("userEmail").textContent = user.email;
+  document.getElementById("signout-btn").style.display = "block";
 }
 
 // Fetch user history
@@ -185,14 +186,17 @@ document.getElementById("signout-btn").addEventListener("click", () => {
   document.getElementById("userInfo").style.display = "none";
   document.getElementById("historySection").style.display = "none";
 
+  // Hide sign-out button
+  document.getElementById("signout-btn").style.display = "none";
+
   // Show sign-in section
   document.getElementById("authSection").style.display = "flex";
 
   // Clear editor and prompt inputs (optional)
   editor.setValue(`{
-    "Version": "2012-10-17",
-    "Statement": []
-  }`);
+  "Version": "2012-10-17",
+  "Statement": []
+}`);
   document.getElementById("prompt").value = "";
 
   // Optionally clear URL params for token/email/picture to avoid auto sign-in on refresh
