@@ -27,21 +27,23 @@
             <button id="signOutBtn">Sign Out</button>
           </div>
           
-          <ul id="historyList">
-            <li>Loading...</li>
-          </ul>
+          <div class="history-list-container">
+            <ul id="historyList">
+              <li>Loading...</li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="right-panel">
-        <div class="card">
+        <div class="card prompt-card">
           <label for="prompt">Describe access requirements:</label>
           <textarea id="prompt" rows="4" placeholder="e.g., Allow read-only access to S3 bucket 'my-bucket'"></textarea>
           <button id="generateBtn">Generate Policy</button>
         </div>
 
-        <div class="card">
+        <div class="card editor-card">
           <label>Generated IAM Policy:</label>
           <div id="editor" class="editor"></div>
         </div>
