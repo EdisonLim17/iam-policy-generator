@@ -60,11 +60,11 @@ def extract_json_block(text: str) -> str:
     # Try to match triple backtick JSON block
     match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
     if match:
-        return json.dumps(match.group(1))
+        return json.loads(match.group(1))
     
     # Fallback: find the first JSON-looking object
     match = re.search(r"(\{.*\})", text, re.DOTALL)
     if match:
-        return json.dumps(match.group(1))
+        return json.loads(match.group(1))
 
     raise ValueError("No valid JSON found in the response.")
