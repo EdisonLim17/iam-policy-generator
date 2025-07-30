@@ -112,11 +112,11 @@ async function fetchHistory() {
 }
 
 // Generate IAM Policy
-document.getElementById("generateBtn").addEventListener("click", async () => {
+document.getElementById("generate-btn").addEventListener("click", async () => {
   const prompt = document.getElementById("prompt").value.trim();
   if (!prompt) return;
 
-  const button = document.getElementById("generateBtn");
+  const button = document.getElementById("generate-btn");
   button.disabled = true;
   button.textContent = "Generating...";
 
@@ -172,12 +172,12 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
 document.getElementById("prompt").addEventListener("keydown", function (e) {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault(); // Prevent newline
-    document.getElementById("generateBtn").click(); // Simulate button click
+    document.getElementById("generate-btn").click(); // Simulate button click
   }
 });
 
 // Sign out functionality
-document.getElementById("signOutBtn").addEventListener("click", () => {
+document.getElementById("signout-btn").addEventListener("click", () => {
   // Clear token
   token = null;
 

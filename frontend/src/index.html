@@ -11,6 +11,10 @@
   <div class="container">
     <h1>AWS IAM Policy Generator</h1>
 
+    <div class="signout-container">
+      <button id="signout-btn">Sign Out</button>
+    </div>
+
     <div class="main-layout">
       <!-- LEFT COLUMN -->
       <div class="left-panel">
@@ -24,7 +28,6 @@
           <div class="user-info" id="userInfo" style="display:none;">
             <img id="userPicture" alt="Profile Picture" />
             <p id="userEmail"></p>
-            <button id="signOutBtn">Sign Out</button>
           </div>
           
           <div class="history-list-container">
@@ -40,7 +43,7 @@
         <div class="card prompt-card">
           <label for="prompt">Describe access requirements:</label>
           <textarea id="prompt" rows="4" placeholder="e.g., Allow read-only access to S3 bucket 'my-bucket'"></textarea>
-          <button id="generateBtn">Generate Policy</button>
+          <button id="generate-btn">Generate Policy</button>
         </div>
 
         <div class="card editor-card">
