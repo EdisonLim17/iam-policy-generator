@@ -85,6 +85,7 @@ async function fetchHistory() {
 
         // History summary that you click to load
         const summary = document.createElement("div");
+        summary.classList.add("truncated-text");
         summary.textContent = item.prompt;
         summary.style.cursor = "pointer";
         summary.style.fontWeight = "bold";
