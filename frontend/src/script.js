@@ -54,9 +54,9 @@ document.getElementById("googleSignInBtn").addEventListener("click", () => {
 
 // Show user info
 function showUserInfo(user) {
-  document.getElementById("authSection").style.display = "none";
+  document.getElementById("authPlaceholder").style.display = "none";
   document.getElementById("userInfo").style.display = "flex";
-  document.getElementById("historySection").style.display = "flex";
+  document.getElementById("historyListContainer").style.display = "block";
   document.getElementById("userPicture").src = user.picture;
   document.getElementById("userEmail").textContent = user.email;
   document.getElementById("signout-btn").style.display = "block";
@@ -184,13 +184,13 @@ document.getElementById("signout-btn").addEventListener("click", () => {
 
   // Hide user info and history panel
   document.getElementById("userInfo").style.display = "none";
-  document.getElementById("historySection").style.display = "none";
+  document.getElementById("historyListContainer").style.display = "none";
 
   // Hide sign-out button
   document.getElementById("signout-btn").style.display = "none";
 
   // Show sign-in section
-  document.getElementById("authSection").style.display = "flex";
+  document.getElementById("authPlaceholder").style.display = "flex";
 
   // Clear editor and prompt inputs (optional)
   editor.setValue(`{
