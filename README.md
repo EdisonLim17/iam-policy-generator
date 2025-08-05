@@ -2,17 +2,13 @@
 
 This project is a cloud-native web application that allows users to generate AWS IAM policies in natural language using the OpenAI API. It features a full-stack, multi-tier architecture with a FastAPI backend hosted in a private VPC, an RDS database for storing prompt history, and a secure, scalable frontend hosted with AWS Amplify.
 
+The IAM Policy Generator translates user-provided descriptions (e.g., “Allow full S3 access for logs bucket”) into valid AWS IAM policies using OpenAI's API. It also stores prompt history if users are logged in with their Google account, and allows users to revisit past queries via a scrollable UI.
+
 ---
 
 ## 🌐 Video Demo
 
 Video demo to be added
-
----
-
-## 🧩 Overview
-
-The IAM Policy Generator translates user-provided descriptions (e.g., “Allow full S3 access for logs bucket”) into valid AWS IAM policies using OpenAI's API. It also stores prompt history if users are logged in with their Google account, and allows users to revisit past queries via a scrollable UI.
 
 ---
 
@@ -33,13 +29,13 @@ Architecture diagram to be added
 
 ## 🚀 Features
 
-- 🌐 Natural language to IAM policy generation (via OpenAI)
-- 📜 Syntax-highlighted JSON viewer
-- 🧠 History panel for past prompts (persisted in RDS)
-- 🔒 End-to-end encryption with HTTPS
-- 🧩 Modular architecture (frontend, backend, database)
-- 🧰 Fully built and managed using Terraform
-- 📄 ALB + private EC2 for backend security
+- Natural language to IAM policy generation (via OpenAI)
+- Syntax-highlighted JSON viewer
+- History panel for past prompts (persisted in RDS)
+- End-to-end encryption with HTTPS
+- Modular architecture (frontend, backend, database)
+- Fully built and managed using Terraform
+- ALB + private EC2 for backend security
 
 ---
 
@@ -61,17 +57,17 @@ Architecture diagram to be added
 
 ## 🔐 Security Highlights
 
-- **No environment variables stored in code** – all secrets (e.g., OpenAI API key, DB credentials) are stored in **AWS Secrets Manager**.
-- **Private subnet for EC2 backend** – inaccessible from the internet.
-- **Application Load Balancer** – terminates HTTPS traffic securely and forwards requests to the backend.
-- **Least privilege IAM policies** – tightly scoped permissions for Terraform and GitHub Actions.
-- **HTTPS everywhere** – using an ACM-provided certificate and Route 53 for domain management.
+- **No environment variables stored in code** – all secrets (e.g., OpenAI API key, DB credentials) are stored in **AWS Secrets Manager**
+- **Private subnet for EC2 backend** – inaccessible from the internet
+- **Application Load Balancer** – terminates HTTPS traffic securely and forwards requests to the backend
+- **Least privilege IAM policies** – tightly scoped permissions for Terraform and GitHub Actions
+- **HTTPS everywhere** – using an ACM-provided certificate and Route 53 for domain management
 
 ---
 
 ## 🔄 CI/CD Workflow
 
-### Frontend – Amplify
+### Frontend – Amplify + GitHub Actions
 - Triggered on pushes to the `main` branch
 - Amplify rebuilds and redeploys the static frontend
 - Route 53 + ACM ensure domain and HTTPS remain stable
