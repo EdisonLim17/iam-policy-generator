@@ -49,7 +49,7 @@ This project features a full-stack, multi-tier architecture with a FastAPI backe
 | AI Integration       | OpenAI (GPT-4)                                            |
 | Hosting              | AWS Amplify (frontend), EC2 (backend)                     |
 | Database             | Amazon RDS (PostgreSQL)                                   |
-| Networking           | VPC, Private/Public Subnets, ALB                          |
+| Networking           | VPC, Private/Public Subnets, ALB, NAT Gateways            |
 | Scaling/HA/FT        | Auto Scaling Groups (EC2), Multi-AZ RDS, Dual NAT Gateways|
 | Secrets Management   | AWS Secrets Manager                                       |
 | Infrastructure       | Terraform                                                 |
