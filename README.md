@@ -46,28 +46,28 @@ Architecture diagram to be added
 | Frontend     | HTML, CSS, JavaScript                |
 | Backend      | FastAPI, Python                      |
 | AI API       | OpenAI (GPT-4)                       |
-| Infrastructure | Terraform                          |
 | Hosting      | AWS Amplify (frontend), EC2 (backend)|
 | Database     | Amazon RDS (PostgreSQL)              |
 | Networking   | VPC, Private/Public Subnets, ALB     |
 | Secrets Mgmt | AWS Secrets Manager                  |
+| Infrastructure | Terraform                          |
 | CI/CD        | GitHub Actions                       |
 
 ---
 
 ## 🔐 Security Highlights
 
-- **No environment variables stored in code** – all secrets (e.g., OpenAI API key, DB credentials) are stored in **AWS Secrets Manager**
 - **Private subnet for EC2 backend** – inaccessible from the internet
+- **HTTPS everywhere** – using an ACM-provided certificate and Route 53 for domain management
 - **Application Load Balancer** – terminates HTTPS traffic securely and forwards requests to the backend
 - **Least privilege IAM policies** – tightly scoped permissions for Terraform and GitHub Actions
-- **HTTPS everywhere** – using an ACM-provided certificate and Route 53 for domain management
+- **No environment variables stored in code** – all secrets (e.g., OpenAI API key, DB credentials) are stored in **AWS Secrets Manager**
 
 ---
 
 ## 🔄 CI/CD Workflow
 
-### Frontend – Amplify + GitHub Actions
+### Frontend – Amplify
 - Triggered on pushes to the `main` branch
 - Amplify rebuilds and redeploys the static frontend
 - Route 53 + ACM ensure domain and HTTPS remain stable
