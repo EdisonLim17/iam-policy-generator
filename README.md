@@ -1,8 +1,6 @@
 # IAM Policy Generator
 
-IAM Policy Generator is a cloud-native web application that allows users to generate valid AWS IAM policies using plain English.
-
-It translates user-provided descriptions (e.g., “Allow full S3 access for logs bucket”) into valid AWS IAM policies using OpenAI's API. By combining AI capabilities with a robust AWS architecture, this tool demonstrates how LLMs can be integrated securely and reliably into production-grade cloud-native applications. Users who sign in with Google can also view and revisit past prompts via a scrollable UI, with all data securely stored in RDS.
+IAM Policy Generator is a cloud-native web application that allows users to generate valid AWS IAM policies using plain English. It translates user-provided descriptions (e.g., “Allow full S3 access for logs bucket”) into valid AWS IAM policies using OpenAI's API. Users who sign in with Google can also view and revisit past prompts via a scrollable UI, with all data securely stored in RDS.
 
 This project features a full-stack, multi-tier architecture with a FastAPI backend hosted in a private VPC, an RDS database for storing prompt history, and a secure, scalable frontend hosted with AWS Amplify. The architecture prioritizes high availability, scalability, and fault tolerance — leveraging Auto Scaling Groups for backend EC2 instances, Multi-AZ RDS deployments for failover, and redundant NAT Gateways across public subnets.
 
