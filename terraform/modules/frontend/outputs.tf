@@ -1,3 +1,5 @@
+# Outputs for Amplify frontend app and JWT secret ARN
+
 output "amplify_app_url" {
   description = "The URL of the Amplify frontend application"
   value       = aws_amplify_app.frontend_web.default_domain
@@ -19,5 +21,6 @@ output "amplify_default_domain" {
 }
 
 output "jwt_secret_arn" {
-  value = aws_secretsmanager_secret.jwt_secret.arn
+  description = "The ARN of the JWT secret in AWS Secrets Manager"
+  value       = aws_secretsmanager_secret.jwt_secret.arn
 }

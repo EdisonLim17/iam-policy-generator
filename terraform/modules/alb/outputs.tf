@@ -9,7 +9,7 @@ output "fastapi_backend_app_server_tg_arn" {
 }
 
 output "fastapi_backend_app_url" {
-  description = "The URL of the FastAPI backend application"
+  description = "The URL (DNS name) of the FastAPI backend application"
   value       = aws_lb.fastapi_backend_app_server_alb.dns_name
 }
 

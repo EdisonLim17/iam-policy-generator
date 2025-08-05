@@ -1,3 +1,7 @@
+# ------------------------------------------------------------------------------
+# VPC Configuration
+# ------------------------------------------------------------------------------
+
 variable "vpc_cidr_block" {
   description = "The CIDR block for the VPC."
   type        = string
@@ -10,12 +14,21 @@ variable "vpc_name" {
   default     = "iam_policy_generator_main_vpc"
 }
 
+# ------------------------------------------------------------------------------
+# Availability Zones
+# ------------------------------------------------------------------------------
+
 variable "availability_zones" {
   description = "List of availability zones to use for the subnets."
   type        = list(string)
   default     = ["us-east-1a", "us-east-1b"]
 }
 
+# ------------------------------------------------------------------------------
+# Subnet Names
+# ------------------------------------------------------------------------------
+
+# Public subnets for hosting the ALB (and NAT Gateways)
 variable "public_web_subnet_a_name" {
   description = "Name for the public web subnet in availability zone A."
   type        = string
@@ -28,6 +41,7 @@ variable "public_web_subnet_b_name" {
   default     = "public_web_subnet_b"
 }
 
+# Private subnets for hosting the FastAPI backend app
 variable "private_app_subnet_a_name" {
   description = "Name for the private app subnet in availability zone A."
   type        = string
@@ -40,6 +54,7 @@ variable "private_app_subnet_b_name" {
   default     = "private_app_subnet_b"
 }
 
+# Private subnets for hosting the RDS database
 variable "private_db_subnet_a_name" {
   description = "Name for the private DB subnet in availability zone A."
   type        = string
@@ -51,6 +66,10 @@ variable "private_db_subnet_b_name" {
   type        = string
   default     = "private_db_subnet_b"
 }
+
+# ------------------------------------------------------------------------------
+# NAT Gateways and EIPs
+# ------------------------------------------------------------------------------
 
 variable "public_web_subnet_a_nat_gateway_name" {
   description = "Name for the NAT gateway in public web subnet A."
@@ -76,30 +95,41 @@ variable "public_web_subnet_b_nat_eip_name" {
   default     = "public_web_subnet_b_nat_eip"
 }
 
+# ------------------------------------------------------------------------------
+# Networking Components
+# ------------------------------------------------------------------------------
+
 variable "igw_name" {
   description = "Name for the internet gateway."
   type        = string
   default     = "igw"
 }
 
+# ------------------------------------------------------------------------------
+# Route Tables
+# ------------------------------------------------------------------------------
+
+# Public route table for outbound internet access
 variable "public_route_table_name" {
   description = "Name for the public route table."
   type        = string
   default     = "public_route_table"
 }
 
+# Private route tables for app subnets
 variable "private_app_subnet_a_route_table_name" {
-  description = "Name for the private route table."
+  description = "Name for the private route table for app subnet A."
   type        = string
   default     = "private_app_subnet_a_route_table"
 }
 
 variable "private_app_subnet_b_route_table_name" {
-  description = "Name for the private route table in subnet B."
+  description = "Name for the private route table for app subnet B."
   type        = string
   default     = "private_app_subnet_b_route_table"
 }
 
+# Private route tables for DB subnets
 variable "private_db_subnet_a_route_table_name" {
   description = "Name for the private DB route table in subnet A."
   type        = string

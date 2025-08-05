@@ -1,13 +1,13 @@
 variable "instance_identifier" {
   description = "The identifier for the database instance."
   type        = string
-  default = "iam-policy-generator-db-instance"
+  default     = "iam-policy-generator-db-instance"
 }
 
 variable "db_name" {
   description = "The name of the database to create."
   type        = string
-  default = "IAMPolicyGeneratorDB"
+  default     = "IAMPolicyGeneratorDB"
 }
 
 variable "allocated_storage" {
@@ -59,12 +59,12 @@ variable "backup_retention_period" {
 }
 
 variable "private_db_subnet_a_id" {
-  description = "The name of the primary DB subnet group."
+  description = "The ID of the private DB subnet in availability zone A."
   type        = string
 }
 
 variable "private_db_subnet_b_id" {
-  description = "The name of the standby DB subnet group."
+  description = "The ID of the private DB subnet in availability zone B."
   type        = string
 }
 

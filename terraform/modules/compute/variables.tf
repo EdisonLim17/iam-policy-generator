@@ -1,41 +1,41 @@
 variable "fastapi_backend_app_server_lt_name" {
-    description = "Name for the backend application server"
-    type        = string
-    default     = "fastapi_backend_app_server_"
+  description = "Name prefix for the backend application server launch template"
+  type        = string
+  default     = "fastapi_backend_app_server_"
 }
 
 variable "fastapi_backend_app_server_instance_type" {
-    description = "Instance type for the backend application server"
-    type        = string
-    default     = "t2.micro"
+  description = "EC2 instance type for the backend application server"
+  type        = string
+  default     = "t2.micro"
 }
 
 variable "main_vpc_id" {
-    description = "ID of the main VPC"
-    type        = string
-    default     = ""
+  description = "ID of the main VPC where backend servers are deployed"
+  type        = string
+  default     = ""
 }
 
 variable "private_app_subnet_a_id" {
-    description = "ID of the private app subnet A"
-    type        = string
-    default     = ""
+  description = "ID of the private application subnet in availability zone A"
+  type        = string
+  default     = ""
 }
 
 variable "private_app_subnet_b_id" {
-    description = "ID of the private app subnet B"
-    type        = string
-    default     = ""
+  description = "ID of the private application subnet in availability zone B"
+  type        = string
+  default     = ""
 }
 
 variable "alb_sg_id" {
-    description = "ID of the security group for the ALB"
-    type        = string
-    default     = ""
+  description = "Security group ID for the Application Load Balancer"
+  type        = string
+  default     = ""
 }
 
 variable "fastapi_backend_app_server_tg_arn" {
-    description = "ARN of the FastAPI backend application server target group"
-    type        = string
-    default     = ""
+  description = "ARN of the target group for the FastAPI backend application server"
+  type        = string
+  default     = ""
 }
