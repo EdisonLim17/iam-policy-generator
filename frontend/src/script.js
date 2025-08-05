@@ -1,7 +1,10 @@
+// Global variables
 let backend_url = "";
 let google_client_id = "";
 let token = null;
+let editor;
 
+// Load configuration from config.json
 fetch('/config.json')
   .then(response => response.json())
   .then(config => {
@@ -9,7 +12,7 @@ fetch('/config.json')
     google_client_id = config.google_client_id;
     console.log('Backend URL:', backend_url);
 
-    // Auth token check here so backend_url is ready before fetchHistory is called
+    // Extract token, email, and picture from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const accessToken = urlParams.get("token");
     const email = urlParams.get("email");
@@ -25,8 +28,7 @@ fetch('/config.json')
     console.error('Failed to load config.json', err);
   });
 
-let editor;
-
+// Load Monaco Editor
 require.config({ paths: { vs: "https://unpkg.com/monaco-editor@0.45.0/min/vs" } });
 require(["vs/editor/editor.main"], function () {
   editor = monaco.editor.create(document.getElementById("editor"), {
@@ -41,7 +43,7 @@ require(["vs/editor/editor.main"], function () {
   });
 });
 
-// Sign in with Google
+// Handle Google Sign-In button click
 document.getElementById("googleSignInBtn").addEventListener("click", () => {
   const clientId = google_client_id;
   const redirectUri = "https://iampolicygenerator-backend.edisonlim.ca/oauth2/callback";
@@ -62,7 +64,7 @@ function showUserInfo(user) {
   document.getElementById("signout-btn").style.display = "block";
 }
 
-// Fetch user history
+// Fetch user history from backend
 async function fetchHistory() {
   try {
     const response = await fetch(`${backend_url}/history`, {
@@ -83,7 +85,7 @@ async function fetchHistory() {
       data.forEach(item => {
         const li = document.createElement("li");
 
-        // History summary that you click to load
+        // Prompt that you click to load previous policy
         const summary = document.createElement("div");
         summary.classList.add("truncated-text");
         summary.textContent = item.prompt;
@@ -109,7 +111,6 @@ async function fetchHistory() {
     }
   } catch (error) {
     console.error("Error fetching history:", error);
-    // Optionally show a user-friendly error message here
   }
 }
 
@@ -123,6 +124,7 @@ document.getElementById("generate-btn").addEventListener("click", async () => {
   button.textContent = "Generating...";
 
   try {
+    // Send request to backend to generate policy
     const response = await fetch(`${backend_url}/generate`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -136,14 +138,8 @@ document.getElementById("generate-btn").addEventListener("click", async () => {
 
     const data = await response.json();
     editor.setValue(data.iam_policy || "// Invalid response");
-    // try {
-    //   const parsed = typeof data.iam_policy === "string" ? JSON.parse(data.iam_policy) : data.iam_policy;
-    //   editor.setValue(JSON.stringify(parsed, null, 2));
-    // } catch (e) {
-    //   console.error("Failed to generate policy:", e);
-    //   editor.setValue("// Invalid response");
-    // }
 
+    // Save history if user is signed in
     if (token) {
       const saveResponse = await fetch(`${backend_url}/save-history`, {
         method: "POST",
@@ -159,7 +155,7 @@ document.getElementById("generate-btn").addEventListener("click", async () => {
         throw new Error(`Error saving history: ${saveResponse.status} ${errorText}`);
       }
       
-      fetchHistory();
+      fetchHistory(); // Refresh history after saving
     }
   } catch (error) {
     console.error("Error generating policy:", error);
@@ -178,29 +174,27 @@ document.getElementById("prompt").addEventListener("keydown", function (e) {
   }
 });
 
-// Sign out functionality
+// Handle Sign out button click
 document.getElementById("signout-btn").addEventListener("click", () => {
   // Clear token
   token = null;
 
-  // Hide user info and history panel
+  // Hide user info, history panel, and signout button
   document.getElementById("userInfo").style.display = "none";
   document.getElementById("historyListContainer").style.display = "none";
-
-  // Hide sign-out button
   document.getElementById("signout-btn").style.display = "none";
 
   // Show sign-in section
   document.getElementById("authPlaceholder").style.display = "flex";
 
-  // Clear editor and prompt inputs (optional)
+  // Reset editor and prompt input
   editor.setValue(`{
   "Version": "2012-10-17",
   "Statement": []
 }`);
   document.getElementById("prompt").value = "";
 
-  // Optionally clear URL params for token/email/picture to avoid auto sign-in on refresh
+  // Clear token/email/picture from URL
   if (window.history.replaceState) {
     const url = new URL(window.location);
     url.searchParams.delete('token');
