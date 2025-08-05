@@ -7,11 +7,14 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 import requests, urllib.parse, json, boto3
 from botocore.exceptions import ClientError
+
 from iam_policy_generator import generate_iam_policy
 from models import SessionLocal, get_or_create_user, save_history, get_user_history
 
+# Initialize FastAPI app
 app = FastAPI()
 
+# CORS configuration, allow frontend to access the API
 origins = [
     "https://iampolicygenerator.edisonlim.ca"
 ]
@@ -32,9 +35,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 REDIRECT_URI = "https://iampolicygenerator-backend.edisonlim.ca/oauth2/callback"
 
-# =======================
-# Load AWS Secrets
-# =======================
+# Load AWS Secrets Manager Secrets
 def get_secret(secret_name: str):
     region_name = "us-east-1"
     client = boto3.client('secretsmanager', region_name=region_name)
@@ -47,6 +48,7 @@ def get_secret(secret_name: str):
 
 @app.on_event("startup")
 def startup_event():
+    """Fetch and load secrets on app startup."""
     global google_client_id, google_client_secret, SECRET_KEY
 
     # Load Google OAuth credentials
@@ -62,26 +64,28 @@ def startup_event():
         raise ValueError("Critical secrets are missing in AWS Secrets Manager")
 
 
-# =======================
 # Pydantic Models
-# =======================
 class PromptRequest(BaseModel):
     prompt: str
 
+class SaveHistoryRequest(BaseModel):
+    prompt: str
+    policy: str
 
-# =======================
-# Routes
-# =======================
+# Root Route
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the IAM Policy Generator API"}
 
+# Health Check Route
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
 
+# Generate IAM Policy Route
 @app.post("/generate")
 async def generate(prompt: PromptRequest):
+    """Generate IAM policy from user prompt."""
     if not prompt.prompt:
         return {"error": "Missing prompt in request data"}
 
@@ -89,11 +93,35 @@ async def generate(prompt: PromptRequest):
     return {"iam_policy": iam_policy}
 
 
-# =======================
+# JWT Utilities
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    """Create a signed JWT token."""
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    """Validate JWT and extract user info."""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: int = payload.get("user_id")
+        email: str = payload.get("sub")
+
+        if user_id is None or email is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        
+        return {"user_id": user_id, "email": email}
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+
 # Google OAuth Callback
-# =======================
 @app.get("/oauth2/callback")
 def google_callback(code: str):
+    """Handle OAuth2 redirect from Google."""
     token_url = "https://oauth2.googleapis.com/token"
     token_data = {
         "code": code,
@@ -112,7 +140,7 @@ def google_callback(code: str):
     if not access_token:
         return {"error": "No access token received"}
 
-    # Get user info
+    # Get user info from Google
     userinfo_resp = requests.get(
         "https://www.googleapis.com/oauth2/v3/userinfo",
         headers={"Authorization": f"Bearer {access_token}"}
@@ -121,56 +149,40 @@ def google_callback(code: str):
 
     # Create user in DB if not exists
     db = SessionLocal()
-    user = get_or_create_user(db, userinfo["email"], userinfo.get("name"), userinfo.get("picture"))
+    user = get_or_create_user(
+        db, 
+        userinfo["email"], 
+        userinfo.get("name"), 
+        userinfo.get("picture")
+    )
 
-    # Create JWT
+    # Generate custom JWT for frontend use
     token = create_access_token({"sub": user.email, "user_id": user.id})
 
+    # Redirect to frontend with token and user info
     frontend_redirect = f"https://iampolicygenerator.edisonlim.ca?token={token}&email={urllib.parse.quote(user.email)}&picture={urllib.parse.quote(user.picture)}"
+    
     return RedirectResponse(url=frontend_redirect)
 
 
-# =======================
-# JWT Utilities
-# =======================
-def create_access_token(data: dict, expires_delta: timedelta = None):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: int = payload.get("user_id")
-        email: str = payload.get("sub")
-        if user_id is None or email is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-        return {"user_id": user_id, "email": email}
-    except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
-
-
-# =======================
 # History Endpoints
-# =======================
-class SaveHistoryRequest(BaseModel):
-    prompt: str
-    policy: str
-
 @app.post("/save-history")
 def save_user_history(data: SaveHistoryRequest, current_user=Depends(get_current_user)):
+    """Save user prompt and generated policy to DB."""
     db = SessionLocal()
     saved = save_history(db, current_user["user_id"], data.prompt, data.policy)
     return {"message": "History saved", "history_id": saved.id}
 
 @app.get("/history")
 def get_history(current_user=Depends(get_current_user)):
+    """Retrieve authenticated user's saved history."""
     db = SessionLocal()
     histories = get_user_history(db, current_user["user_id"])
     return [
-        {"prompt": h.prompt, "policy": json.loads(h.policy), "created_at": h.created_at.isoformat()}
+        {
+            "prompt": h.prompt, 
+            "policy": json.loads(h.policy), 
+            "created_at": h.created_at.isoformat()
+        }
         for h in histories
     ]

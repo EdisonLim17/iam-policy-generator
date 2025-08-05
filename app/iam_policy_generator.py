@@ -1,12 +1,14 @@
-import os, re
-from openai import OpenAI
 import json
 import boto3
+from openai import OpenAI
 from botocore.exceptions import ClientError
 
-
+# Retrieve OpenAI API Key from AWS Secrets Manager
 def get_openai_api_key():
-
+    """
+    Fetch the OpenAI API key stored in AWS Secrets Manager.
+    Expects a secret named 'openai/iam-policy-generator-api-key' with a key 'OPENAI_API_KEY'.
+    """
     secret_name = "openai/iam-policy-generator-api-key"
     region_name = "us-east-1"
 
@@ -33,9 +35,15 @@ def get_openai_api_key():
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         raise e
 
+# Initialize OpenAI client using the retrieved API key
 client = OpenAI(api_key=get_openai_api_key())
 
+# IAM Policy Generation Function
 def generate_iam_policy(user_prompt: str):
+    """
+    Uses OpenAI's GPT model to generate a valid IAM policy JSON based on a user's prompt.
+    Returns the raw JSON string if successful, or an error message if failed.
+    """
     try:
         response = client.responses.create(
             model = "gpt-4.1-nano-2025-04-14",
@@ -49,24 +57,6 @@ def generate_iam_policy(user_prompt: str):
 
         return response.output_text
 
-        # cleaned_response = extract_json_block(response.output_text)
-
-        # return cleaned_response
-
     except Exception as e:
         print(f"Error generating IAM policy: {e}")
         return {"error": "Failed to generate IAM policy. Please try again."}
-
-# Extract JSON block from the response
-# def extract_json_block(text: str) -> str:
-#     # Try to match triple backtick JSON block
-#     match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
-#     if match:
-#         return json.loads(match.group(1))
-    
-#     # Fallback: find the first JSON-looking object
-#     match = re.search(r"(\{.*\})", text, re.DOTALL)
-#     if match:
-#         return json.loads(match.group(1))
-
-#     raise ValueError("No valid JSON found in the response.")
