@@ -14,7 +14,7 @@ This project features a full-stack, multi-tier architecture with a FastAPI backe
 
 ## ☁️ Architecture
 
-Architecture diagram coming soon
+![Image of architecture](IAM-Policy-Generator-AWS-Architecture.jpeg)
 
 **Key AWS Components:**
 - **Amplify** – Hosts the frontend
