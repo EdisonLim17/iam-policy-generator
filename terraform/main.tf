@@ -8,9 +8,9 @@ module "compute" {
   source = "./modules/compute"
 
   # Networking
-  main_vpc_id                       = module.vpc.main_vpc_id
-  private_app_subnet_a_id           = module.vpc.private_app_subnet_a_id
-  private_app_subnet_b_id           = module.vpc.private_app_subnet_b_id
+  main_vpc_id             = module.vpc.main_vpc_id
+  private_app_subnet_a_id = module.vpc.private_app_subnet_a_id
+  private_app_subnet_b_id = module.vpc.private_app_subnet_b_id
 
   # Load Balancer integration
   alb_sg_id                         = module.alb.alb_sg_id
@@ -22,9 +22,9 @@ module "alb" {
   source = "./modules/alb"
 
   # Networking
-  main_vpc_id                  = module.vpc.main_vpc_id
-  public_web_subnet_a_id       = module.vpc.public_web_subnet_a_id
-  public_web_subnet_b_id       = module.vpc.public_web_subnet_b_id
+  main_vpc_id            = module.vpc.main_vpc_id
+  public_web_subnet_a_id = module.vpc.public_web_subnet_a_id
+  public_web_subnet_b_id = module.vpc.public_web_subnet_b_id
 
   # SSL Certificate for HTTPS (issued in domain module)
   fastapi_backend_app_cert_arn = module.domain.iam_policy_generator_backend_cert_arn
@@ -35,8 +35,8 @@ module "domain" {
   source = "./modules/domain"
 
   # Backend domain record (ALB)
-  alb_dns_name           = module.alb.alb_dns_name
-  alb_zone_id            = module.alb.alb_zone_id
+  alb_dns_name = module.alb.alb_dns_name
+  alb_zone_id  = module.alb.alb_zone_id
 
   # Frontend domain record (Amplify)
   amplify_app_id         = module.frontend.amplify_app_id
@@ -65,5 +65,5 @@ module "database" {
   main_vpc_id            = module.vpc.main_vpc_id
 
   # Security
-  backend_app_sg_id      = module.compute.fastapi_backend_app_server_sg_id
+  backend_app_sg_id = module.compute.fastapi_backend_app_server_sg_id
 }
