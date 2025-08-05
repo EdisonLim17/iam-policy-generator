@@ -8,7 +8,7 @@ This project features a full-stack, multi-tier architecture with a FastAPI backe
 
 ## 🌐 Video Demo
 
-Video demo in progress
+[Watch the demo](https://www.youtube.com/watch?v=gwHuP2tRXlc)
 
 ---
 
