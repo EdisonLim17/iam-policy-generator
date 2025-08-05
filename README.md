@@ -1,4 +1,4 @@
-# 🔐 IAM Policy Generator
+# IAM Policy Generator
 
 This project is a cloud-native web application that allows users to generate AWS IAM policies in natural language using the OpenAI API. It features a full-stack, multi-tier architecture with a FastAPI backend hosted in a private VPC, an RDS database for storing prompt history, and a secure, scalable frontend hosted with AWS Amplify.
 
@@ -12,7 +12,7 @@ Video demo to be added
 
 ---
 
-## 🏗️ Architecture
+## ☁️ Architecture
 
 Architecture diagram to be added
 
